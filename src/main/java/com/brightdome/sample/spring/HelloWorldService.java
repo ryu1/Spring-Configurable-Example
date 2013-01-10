@@ -7,5 +7,7 @@ public class HelloWorldService {
 	
 	public void sayHello() {
 		System.out.println("Hello World!");
+		Sample sample = new Sample();
+		sample.foo();
 	}
 }
