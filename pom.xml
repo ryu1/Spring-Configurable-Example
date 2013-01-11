@@ -1,126 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.brightdome</groupId>
-	<artifactId>spring-configurable-sample</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Spring Configurable Sample</name>
-	<description>
-		Sample project to show how to work with Spring's @Configurable capability 
-		to inject dependencies into classes not instantiated by Spring.
-	</description>
-	
-	
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.labelgate.ps2.front</groupId>
+    <artifactId>ps2_front</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.1-SNAPSHOT</version>
+    <name>PS2 Front</name>
+    <url>http://front.ps2.lablegate.com</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<aspectj.version>1.6.12</aspectj.version>
-        <spring.version>3.0.7.RELEASE</spring.version>
-	</properties>
+    <properties>
+        <java-version>1.6</java-version>
+        <org.springframework-version>3.0.5.RELEASE</org.springframework-version>
+        <org.spring-ws-version>2.0.2.RELEASE</org.spring-ws-version>
+        <org.aspectj-version>1.6.10</org.aspectj-version>
+        <org.slf4j-version>1.6.1</org.slf4j-version>
+        <log4j-version>1.2.16</log4j-version>
+        <javax.inject-version>1</javax.inject-version>
+        <javax.servlet-api-version>2.5</javax.servlet-api-version>
+        <javax.servlet-jstl-version>1.2</javax.servlet-jstl-version>
+        <commons-fileupload-version>1.2.2</commons-fileupload-version>
+        <commons-io-version>1.4</commons-io-version>
+        <hibernate-version>3.6.7.Final</hibernate-version>
+        <junit-version>[4.0,)</junit-version>
+        <dbunit-version>2.4.8</dbunit-version>
+        <org.postgresql.jdbc-version>9.0-801.jdbc4</org.postgresql.jdbc-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+    </properties>
 
-	<developers>
-		<developer>
-			<id>kclark</id>
-			<name>Kenyatta Clark</name>
-			<email>kenyatta.clark@brightdome.com</email>
-			<url>http://www.brightdome.com</url>
-			<organization>Bright Dome L.L.C.</organization>
-			<organizationUrl>http://www.brightdome.com</organizationUrl>
-		</developer>
-	</developers>
+    <repositories>
+        <!-- For testing against latest Spring snapshots -->
+        <repository>
+            <id>org.springframework.maven.snapshot</id>
+            <name>Spring Maven Snapshot Repository</name>
+            <url>http://maven.springframework.org/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- For developing against latest Spring milestones -->
+        <repository>
+            <id>org.springframework.maven.milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
 
-	<licenses>
-		<license>
-			<name>Apache 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
+        <!-- For Spring releases -->
+        <repository>
+            <id>org.springframework.maven.release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
 
-	<dependencies>
-		<dependency>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.openid4java</groupId>
+            <artifactId>openid4java</artifactId>
+            <version>0.9.5</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlrpc</groupId>
+            <artifactId>xmlrpc-client</artifactId>
+            <version>3.1.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>com.googlecode.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>0.999.15</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>${dbunit-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring -->
+        		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>3.0.7.RELEASE</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework-version}</version>
+            <exclusions>
+                <!-- Exclude Commons Logging in favor of SLF4j -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 			<version>1.0.2</version>
 		</dependency>
-	</dependencies>
+        <!-- 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-instrument</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-agent</artifactId>
+            <version>2.5.6</version>
+            <scope>test</scope>
+        </dependency> -->
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjrt</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<aspectLibraries>
-						<aspectLibrary>
-							<groupId>org.springframework</groupId>
-							<artifactId>spring-aspects</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <!-- Spring-ws -->
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+            <version>${org.spring-ws-version}</version>
+        </dependency>
+
+        <!-- AspectJ -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- @Inject -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject-version}</version>
+        </dependency>
+
+        <!-- JAXB XML Processor -->
+        <!-- <dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
+            <version>2.2.4</version> </dependency> -->
+
+        <!-- WSDL4j -->
+
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+        <!-- Servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>3.0-alpha-1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${org.postgresql.jdbc-version}</version>
+        </dependency>
+
+        <!-- Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate-version}</version>
+        </dependency>
+        <!--<dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
+            <version>2.0</version> </dependency> -->
+        <!-- <dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
+            <version>2.2.6</version> </dependency> -->
+        <!-- <dependency> <groupId>com.sun.xml.bind</groupId> <artifactId>jaxb-impl</artifactId> 
+            <version>2.0.3</version> </dependency> -->
+        <!-- <dependency> <groupId>com.sun.xml.bind</groupId> <artifactId>jaxb-impl</artifactId> 
+            <version>2.2.6-b31</version> </dependency> -->
+        <!-- DBCP -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>7.0.21</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-test</artifactId>
+            <version>2.0.5.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>maven-plugins</groupId>
+                    <artifactId>maven-cobertura-plugin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>maven-plugins</groupId>
+                    <artifactId>maven-findbugs-plugin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xom</groupId>
+                    <artifactId>xom</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <local.username>${env.USERNAME}</local.username>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <configuration>
+                            <!-- <compilerArgument>-Xbootclasspath/p:${settings.localRepository}/javax/xml/bind/jaxb-api/2.2.3/jaxb-api-2.2.3.jar</compilerArgument> -->
+                            <!-- <compilerArguments> <endorseddirs>${endorsed.dir}</endorseddirs> 
+                                </compilerArguments> -->
+                            <source>${java-version}</source>
+                            <target>${java-version}</target>
+                            <verbose>true</verbose>
+                            <debug>true</debug>
+                            <showWarnings>true</showWarnings>
+                            <showDeprecation>true</showDeprecation>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>aspectj-maven-plugin</artifactId>
+                        <version>1.4</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.aspectj</groupId>
+                                <artifactId>aspectjrt</artifactId>
+                                <version>${org.aspectj-version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.aspectj</groupId>
+                                <artifactId>aspectjtools</artifactId>
+                                <version>${org.aspectj-version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>test-compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <aspectLibraries>
+                                <aspectLibrary>
+                                    <groupId>org.springframework</groupId>
+                                    <artifactId>spring-aspects</artifactId>
+                                </aspectLibrary>
+                            </aspectLibraries>
+                            <source>${java-version}</source>
+                            <target>${java-version}</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>sources</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-eclipse-plugin</artifactId>
+                        <version>2.8</version>
+                        <configuration>
+                            <wtpapplicationxml>true</wtpapplicationxml>
+                            <wtpversion>2.0</wtpversion>
+                        </configuration>
+                    </plugin>
+                </plugins>
+
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+
+                <testResources>
+                    <testResource>
+                        <directory>src/main/webapp</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                </testResources>
+            </build>
+
+        </profile>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <finalName>f</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <configuration>
+                            <!-- <compilerArgument>-Xbootclasspath/p:${settings.localRepository}/javax/xml/bind/jaxb-api/2.2.3/jaxb-api-2.2.3.jar</compilerArgument> -->
+                            <!-- <compilerArguments> <endorseddirs>${endorsed.dir}</endorseddirs> 
+                                </compilerArguments> -->
+                            <source>${java-version}</source>
+                            <target>${java-version}</target>
+                            <verbose>true</verbose>
+                            <debug>true</debug>
+                            <showWarnings>true</showWarnings>
+                            <showDeprecation>true</showDeprecation>
+                        </configuration>
+                    </plugin>
+                    <!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
+                        <execution> <id>ant-compile</id> <phase>compile</phase> <configuration> <tasks> 
+                        <ant antfile="build.xml" target="compile"> <property name="classpath" refid="maven.compile.classpath" 
+                        /> </ant> </tasks> </configuration> <goals> <goal>run</goal> </goals> </execution> 
+                        </executions> </plugin> -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>sources</goal>
+                                </goals>
+                            </execution>
+                            <!-- <execution> <phase>validate</phase> <goals> <goal>copy</goal> 
+                                </goals> <configuration> <outputDirectory>${endorsed.dir}</outputDirectory> 
+                                <silent>true</silent> <artifactItems> <artifactItem> <groupId>javax.xml.bind</groupId> 
+                                <artifactId>jaxb-api</artifactId> <version>2.2.4</version> <type>jar</type> 
+                                </artifactItem> <artifactItem> <groupId>com.sun.xml.bind</groupId> <artifactId>jaxb-impl</artifactId> 
+                                <version>2.2.4-1</version> <type>jar</type> </artifactItem> </artifactItems> 
+                                </configuration> </execution> -->
+                        </executions>
+                    </plugin>
+                </plugins>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/dev/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>log4j.xml</exclude>
+                            <exclude>jdbc.properties</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <profile>
+            <id>stage</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <finalName>f</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <configuration>
+                            <source>${java-version}</source>
+                            <target>${java-version}</target>
+                            <verbose>true</verbose>
+                            <debug>true</debug>
+                            <showWarnings>true</showWarnings>
+                            <showDeprecation>true</showDeprecation>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>sources</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/stage/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>log4j.xml</exclude>
+                            <exclude>jdbc.properties</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <profile>
+            <id>live</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <finalName>f</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <configuration>
+                            <source>${java-version}</source>
+                            <target>${java-version}</target>
+                            <verbose>true</verbose>
+                            <debug>true</debug>
+                            <showWarnings>true</showWarnings>
+                            <showDeprecation>true</showDeprecation>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>sources</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/live/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>log4j.xml</exclude>
+                            <exclude>jdbc.properties</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <profile>
+            <id>PaymentService</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>xjc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <extension>true</extension>
+                            <schemaFiles>PaymentService.xsd</schemaFiles>
+                            <schemaDirectory>src/main/resources/member</schemaDirectory>
+                            <packageName>com.labelgate.ps2.front.service.member.dto</packageName>
+                        </configuration>
+                    </plugin>
+                       <!-- 
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>schemagen</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <includes>
+                                <include>
+                                    /home/ishitsuka/Projects/lag_ps2/workspace/ps2_front/src/main/java/**/*
+                                </include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                     -->
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>AccountService</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>xjc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <extension>true</extension>
+                            <schemaFiles>settlement.xsd</schemaFiles>
+                            <schemaDirectory>src/main/resources/member</schemaDirectory>
+                            <packageName>com.labelgate.ps2.front.infra.dto.member</packageName>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
