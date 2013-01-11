@@ -6,3 +6,7 @@ To run from the command line using Maven:
 
 1. `mvn clean compile`
 2. `mvn exec:java -Dexec.mainClass="com.brightdome.sample.spring.HelloWorld"`
+
+* AspectJ required AJDT in order to build in eclipse indigo. 
+
+    `update site : http://download.eclipse.org/tools/ajdt/37/update`
